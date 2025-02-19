@@ -13,8 +13,9 @@ const request = axios.create({
 request.interceptors.request.use(
     config => {
         const token = localStorage.getItem('token'); // 假设 token 存储在 localStorage 中
+        const username = localStorage.getItem('username');
         if (token) {
-            config.headers['Authorization'] = `${token}`;
+            config.headers['Authorization'] = `${token};${username}`;
         }
         return config;
     },

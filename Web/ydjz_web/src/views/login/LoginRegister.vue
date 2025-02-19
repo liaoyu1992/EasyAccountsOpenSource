@@ -115,6 +115,7 @@ export default {
       }
     },
     handleLogin() {
+      localStorage.setItem("username", this.username);
       const hashedPassword = MD5(this.password).toString();
       this.$http({
         url: "/auth/login",
@@ -151,7 +152,7 @@ export default {
     },
     handleRegister() {
       const hashedPassword = MD5(this.password).toString();
-
+      localStorage.setItem("username", this.username);
       this.$http({
         url: "/auth/register",
         method: "post",

@@ -50,9 +50,9 @@ public class TokenInterceptor implements HandlerInterceptor {
 
         String token = request.getHeader("Authorization");
         log.debug("Authorization token: {}", token);
-
+        String[] tokens = token.split(";");
         // 进行token验证，并处理验证结果
-        int code = authUtils.isAuth(token);
+        int code = authUtils.isAuth(tokens[0], tokens[1]);
         if (code == 200) {
             log.debug("Authentication successful for URI: {}", uri);
             return true;
