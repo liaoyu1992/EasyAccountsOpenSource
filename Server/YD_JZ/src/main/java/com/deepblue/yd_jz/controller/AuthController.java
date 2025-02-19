@@ -27,7 +27,7 @@ public class AuthController {
     @ApiOperation(value = "登录")
     @PostMapping("/login")
     public BaseDto login(@RequestBody AuthRequestDto authRequestDto) {
-        if (!authService.verfiyAuthFiles()) {
+        if (!authService.verfiyAuthFiles(authRequestDto.getUsername())) {
             return BaseDto.setErrorBean("用户名密码不存在，请注册",418);
         }
         AuthDto authDto = authService.login(authRequestDto.getUsername(), authRequestDto.getPassword());

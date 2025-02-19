@@ -22,30 +22,30 @@ public class AuthUtils {
     private String authFolder;
 
 
-    public int isAuth(String token) {
+    public int isAuth(String token,String username) {
         if (!authEnable) {
             return 200;
         }else {
             if(token == null) {
-                if (!isFileExist()) {
+                if (!isFileExist(username)) {
                     return 418;
                 }else {
                     return 401;
                 }
             }else {
-                return isTokenValid(token);
+                return isTokenValid(token,username);
             }
         }
     }
 
-    private boolean isFileExist() {
-        String keyFile = authFolder + "/secret.key";
+    private boolean isFileExist(String username) {
+        String keyFile = authFolder + "/secret" + username + ".key";
         File file = new File(keyFile);
         return file.exists();
     }
 
-    private int isTokenValid(String token) {
-        File file = new File(authFolder + "/secret.key");
+    private int isTokenValid(String token,String username) {
+        File file = new File(authFolder + "/secret" + username + ".key");
         try {
             //使用OKIO读取文件成为字符串
             String key = Okio.buffer(Okio.source(file)).readUtf8();
@@ -66,8 +66,8 @@ public class AuthUtils {
     }
 
 
-    public Auth getAuth() {
-        File file = new File(authFolder + "/secret.key");
+    public Auth getAuth(String username) {
+        File file = new File(authFolder + "/secret" + username + ".key");
         try {
             //使用OKIO读取文件成为字符串
             String key = Okio.buffer(Okio.source(file)).readUtf8();
@@ -78,8 +78,8 @@ public class AuthUtils {
         }
     }
 
-    public void saveAuth(Auth auth) {
-        File file = new File(authFolder + "/secret.key");
+    public void saveAuth(Auth auth,String username) {
+        File file = new File(authFolder + "/secret" + username + ".key");
         try {
             //使用OKIO写入文件
             Okio.buffer(Okio.sink(file)).writeUtf8(auth.encode()).close();

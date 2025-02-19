@@ -23,8 +23,8 @@ public class AuthService {
     @Value("${auth.expired}")
     private long expired;
 
-    public boolean verfiyAuthFiles() {
-        Auth auth = authUtils.getAuth();
+    public boolean verfiyAuthFiles(String username) {
+        Auth auth = authUtils.getAuth(username);
         if (auth != null) {
             return true;
         }
@@ -34,15 +34,15 @@ public class AuthService {
 
     public AuthDto login(String username, String password) {
         String token = null;
-        Auth auth = authUtils.getAuth();
+        Auth auth = authUtils.getAuth(username);
         if (auth != null) {
-            if (auth.getUsername().equals(username)&&auth.getPasswordMD5().equals(password)) {
+            if (auth.getUsername().equals(username) && auth.getPasswordMD5().equals(password)) {
                 auth.refreshToken(expired);
                 token = auth.getToken();
                 AuthDto authDto = new AuthDto();
                 authDto.setToken(token);
                 auth.encode();
-                authUtils.saveAuth(auth);
+                authUtils.saveAuth(auth,username);
                 log.debug("登录成功 user: {} ,token: {}", username, token);
                 return authDto;
             }else {
@@ -54,7 +54,7 @@ public class AuthService {
 
     public AuthDto register(String username, String password) {
         //先判断是否已经有了用户名密码
-        Auth auth = authUtils.getAuth();
+        Auth auth = authUtils.getAuth(username);
         if (auth != null&&auth.getUsername()!=null&&auth.getPasswordMD5()!=null) {
             return null;
         }
@@ -67,7 +67,7 @@ public class AuthService {
         AuthDto authDto = new AuthDto();
         authDto.setToken(token);
         auth.encode();
-        authUtils.saveAuth(auth);
+        authUtils.saveAuth(auth,username);
         return authDto;
     }
 
