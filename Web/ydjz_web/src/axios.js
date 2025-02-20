@@ -6,7 +6,7 @@ import { showNotify} from 'vant'; // 引入 Vant 的通知组件
 // 创建一个 Axios 实例
 const request = axios.create({
 
-    baseURL: window.config.apiBaseUrl, // 替换为你的 API 基础地址
+    baseURL: "http://localhost:8085", // 替换为你的 API 基础地址
     timeout: 5000, // 请求超时时间
 });
 

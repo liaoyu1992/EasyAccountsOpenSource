@@ -1,7 +1,8 @@
 <template>
   <div>
     <van-nav-bar fixed placeholder title="明细" right-text="筛选" @click-right=toScreen() />
-    <van-floating-bubble icon="plus" axis="xy" magnetic="x" v-model:offset="offset" @click="toAddFlow"/>
+    <van-floating-bubble icon="plus" axis="xy" magnetic="x" v-model:offset="offset" @click="()=>{toAddMinusFlow(0)}"/>
+    <van-floating-bubble icon="minus" axis="xy" magnetic="x" v-model:offset="offsetout" @click="()=>{toAddMinusFlow(1)}"/>
     <van-dropdown-menu active-color="#1989fa">
       <van-dropdown-item
           v-model="handle"
@@ -168,6 +169,7 @@ export default {
       offsetX: 0,
       offsetY: 0,
       offset: {x: 0, y: 0},
+      offsetout: {x: 0, y: 0},
     };
   },
 
@@ -176,7 +178,8 @@ export default {
     this.chooseMonth = this.curDate.getFullYear() + "-" + (this.curDate.getMonth() + 1).toString().padStart(2, "0");
     this.getMonthFlow();
     //document.addEventListener('touchmove', this.dragMove);
-    this.offset = {x: window.innerWidth - 83, y: window.innerHeight - 180};
+    this.offsetout = {x: window.innerWidth - 83, y: window.innerHeight - 180};
+    this.offset = {x: window.innerWidth - 146, y: window.innerHeight - 180};
   },
   watch: {
     '$route': 'handleRouteChange'
@@ -246,8 +249,8 @@ export default {
     onHandleClick() {
       this.getMonthFlow();
     },
-    toAddFlow() {
-      this.$router.push({path: "/flow/add"});
+    toAddMinusFlow(type) {
+      this.$router.push({path: `/flow/add`,query:{type}});
     },
 
     toScreen() {
