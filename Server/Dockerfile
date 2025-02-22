@@ -1,5 +1,5 @@
 # 使用 Ubuntu 作为基础镜像
-FROM ubuntu:latest
+FROM java:11
 
 # 维护者信息
 LABEL maintainer="Mecy@deep-blue.cloud"
