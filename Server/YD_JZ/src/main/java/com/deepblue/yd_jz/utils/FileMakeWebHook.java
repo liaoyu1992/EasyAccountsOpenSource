@@ -12,7 +12,7 @@ import java.io.IOException;
 public class FileMakeWebHook {
 
     @Value("${webhook_url}")
-    private   String WEBHOOK_URL;
+    private String WEBHOOK_URL;
 
     public  String sendFile(File file, String fileType, String fileName) {
         OkHttpClient client = new OkHttpClient();
