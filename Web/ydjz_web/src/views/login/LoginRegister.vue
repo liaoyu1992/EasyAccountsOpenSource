@@ -71,6 +71,8 @@ export default {
   },
   mounted() {
     localStorage.removeItem("token");
+    this.username = localStorage.getItem('username') || '';
+    this.password = localStorage.getItem('password') || '';
   },
   methods: {
     showNoticeTitle() {
@@ -135,6 +137,7 @@ export default {
               });
               return;
             }
+            localStorage.setItem("password", this.password);
             const token = response.data.data.token;
             localStorage.setItem("token", token);
             const redirect = this.$route.query.redirect || "/";
