@@ -5,8 +5,15 @@
       placeholder
       title="明细"
       right-text="筛选"
-      @click-right="toScreen()"
-    />
+    >
+    <template #right>
+    <div style="display: flex;align-items: center;">
+      <van-checkbox v-model="isMine" icon-size="18px" @change="onlyMineChange">只看自己</van-checkbox>
+      <div style="color:#1989fa;margin-left:10px" @click="toScreen">筛选</div>
+    </div>
+  </template>
+    </van-nav-bar>
+    
     <van-image
       class="income-button"
       width="60px"
@@ -262,6 +269,7 @@ export default {
       initialX: 0,
       initialY: 0,
       isDragging: false,
+      isMine: true,
       moved: false,
       showPicker: false,
       hasFlow: true,
@@ -350,7 +358,7 @@ export default {
           "/" +
           this.order +
           "/" +
-          this.chooseMonth,
+          this.chooseMonth+`/${this.isMine?localStorage.getItem('username'):'all'}`,
         method: "get",
       }).then((response) => {
         console.log(response.data.data);
@@ -420,7 +428,10 @@ export default {
           // on cancel
         });
     },
-
+    onlyMineChange(value){
+      this.isMine = value;
+      this.getMonthFlow();
+    },
     doDeleteFlow() {
       this.$http({
         url: "/flow/deleteFlow/" + this.flowId,

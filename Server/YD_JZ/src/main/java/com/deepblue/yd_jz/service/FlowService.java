@@ -212,13 +212,13 @@ public class FlowService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public FlowListDateMapDto doGetMainBean(int handle, int order, String date) {
+    public FlowListDateMapDto doGetMainBean(int handle, int order, String date,String username) {
         String monthStr = date.substring(0, 7) + "%";
         FlowListDateMapDto flowListDto = new FlowListDateMapDto();
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyyMMdd_HHmm");
         String time = sdf1.format(new Date());
         log.info("time:  " + time + "   date: " + monthStr + "  handle: " + handle);
-        List<Map<String, Object>> maps = flowDao.getFlowByMain(handle, order, monthStr);
+        List<Map<String, Object>> maps = flowDao.getFlowByMain(handle, order, monthStr,username);
         List<FlowListDateMapDto.FlowListSingleDto> flows = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         BigDecimal moneyIn = new BigDecimal("0");

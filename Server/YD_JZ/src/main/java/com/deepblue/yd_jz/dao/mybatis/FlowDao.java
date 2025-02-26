@@ -48,7 +48,7 @@ public interface FlowDao {
     void collectFlowById(@Param("id") int id,@Param("collect") int collect);
 
     @SelectProvider(type = FlowSelectProvider.class, method = "getFlowByMain")
-    List<Map<String,Object>> getFlowByMain(@Param("handle") int handle,  int order, @Param("date") String date);
+    List<Map<String,Object>> getFlowByMain(@Param("handle") int handle,  int order, @Param("date") String date, @Param("username") String username);
 
     @SelectProvider(type = FlowSelectProvider.class,method = "getFlowByScreen")
     List<Map<String,Object>> getFlowByScreen(int handle, int account, String startDate, String endDate, boolean isSingleMonth,boolean isCollect,String note);

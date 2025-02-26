@@ -10,17 +10,19 @@ import java.util.Date;
 public class FlowSelectProvider {
 
     public String getFlowByMain(@Param("handle") int handle, int order
-            , @Param("date") String date) {
+            , @Param("date") String date, @Param("username") String username) {
         String sqlStr = new SQL() {
             {
-                SELECT("flow.id,flow.f_date,flow.money,flow.collect,flow.exempt,flow.note,a.handle,a.h_name,ac.a_name,acc.a_name t_a_name,t.t_name,t2.t_name p_t_name");
+                SELECT("flow.id,flow.f_date,flow.money,flow.collect,flow.exempt,flow.note,a.handle,a.h_name,ac.a_name,acc.a_name t_a_name,t.t_name,t2.t_name p_t_name,ac.username t_a_username");
                 FROM("flow");
                 LEFT_OUTER_JOIN("action a on flow.action_id = a.id");
                 LEFT_OUTER_JOIN("type t on flow.type_id = t.id");
                 LEFT_OUTER_JOIN("type t2 on t.parent = t2.id");
                 LEFT_OUTER_JOIN("account ac on flow.account_id = ac.id");
                 LEFT_OUTER_JOIN("account acc on flow.account_to_id = acc.id");
-
+                if(username!=null&&!username.isEmpty() && !"all".equals(username)) {
+                    WHERE("ac.username=#{username}");
+                }
                 if (handle >= 3) {
                     WHERE("a.handle < #{handle}", "flow.f_date like #{date}");
                 } else {
