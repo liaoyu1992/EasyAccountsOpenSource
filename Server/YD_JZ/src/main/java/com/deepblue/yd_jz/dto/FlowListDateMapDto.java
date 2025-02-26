@@ -3,15 +3,14 @@ package com.deepblue.yd_jz.dto;
 import lombok.Data;
 
 import java.util.List;
-
 @Data
-public class FlowListDto {
+public class FlowListDateMapDto {
     private String totalIn;
     private String totalOut;
     private String totalEarn;
     private List<FlowTypeDto> typeList;
 
-    private List<FlowListSingleDto> flows;
+    private List<FlowListDateDto> flows;
 
 
     @Data
@@ -31,7 +30,6 @@ public class FlowListDto {
 
     @Data
     public static class FlowListDateDto {
-        private int id;
         private String fDate;
         private String inCome;
         private String outCome;

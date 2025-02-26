@@ -67,9 +67,9 @@ public class FlowController {
     @ApiOperation(value = "获取主业流水")
     @ApiParam(name = "chooseHandle", value = "0:全部 1:支出 2:收入", required = true)
     @GetMapping("/getFlowListMain/{chooseHandle}/{chooseOrder}/{date}")
-    public BaseDto<FlowListDto> getFlowListMain(@PathVariable int chooseHandle, @PathVariable int chooseOrder
+    public BaseDto<FlowListDateMapDto> getFlowListMain(@PathVariable int chooseHandle, @PathVariable int chooseOrder
             , @PathVariable String date ){
-        FlowListDto flowListDto = flowService.doGetMainBean(chooseHandle,chooseOrder,date);
+        FlowListDateMapDto flowListDto = flowService.doGetMainBean(chooseHandle,chooseOrder,date);
         BaseDto baseDto = BaseDto.setSuccessBean();
         baseDto.setData(flowListDto);
         return baseDto;

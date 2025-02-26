@@ -1,19 +1,51 @@
 <template>
   <div>
-    <van-nav-bar fixed placeholder title="明细" right-text="筛选" @click-right="toScreen()" />
-    <van-image class="income-button" width="60px" height="60px" @click="() => {
-        toAddMinusFlow(0);
-      }
-      " fit="contain" :src="incomeUrl" />
-    <van-image class="outcome-button" width="60px" height="60px" @click="() => {
-        toAddMinusFlow(1);
-      }
-      " fit="contain" :src="outcomeUrl" />
+    <van-nav-bar
+      fixed
+      placeholder
+      title="明细"
+      right-text="筛选"
+      @click-right="toScreen()"
+    />
+    <van-image
+      class="income-button"
+      width="60px"
+      height="60px"
+      @click="
+        () => {
+          toAddMinusFlow(0);
+        }
+      "
+      fit="contain"
+      :src="incomeUrl"
+    />
+    <van-image
+      class="outcome-button"
+      width="60px"
+      height="60px"
+      @click="
+        () => {
+          toAddMinusFlow(1);
+        }
+      "
+      fit="contain"
+      :src="outcomeUrl"
+    />
     <van-dropdown-menu active-color="#1989fa">
-      <van-dropdown-item v-model="handle" :options="option1" @change="onHandleClick" />
-      <van-dropdown-item v-model="order" :options="option2" @change="onHandleClick" />
+      <van-dropdown-item
+        v-model="handle"
+        :options="option1"
+        @change="onHandleClick"
+      />
+      <van-dropdown-item
+        v-model="order"
+        :options="option2"
+        @change="onHandleClick"
+      />
     </van-dropdown-menu>
-    <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
+    <van-divider
+      :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
+    >
       月度收支情况
     </van-divider>
     <div style="height: 80px; background: #fff; margin-left: 20px">
@@ -29,86 +61,183 @@
           内部转账笔数： {{ this.flows.length }}
         </div>
       </div>
-      <div style="
+      <div
+        style="
           display: flex;
           flex-direction: column;
           float: right;
           margin-top: 5px;
           margin-right: 20px;
-        ">
-        <div style="
+        "
+      >
+        <div
+          style="
             display: flex;
             justify-content: space-around;
             align-items: center;
             width: 100%;
-          ">
-          <van-button size="mini" plain type="primary" icon="minus" @click="toLastMonth"></van-button>
-          <van-button type="primary" round size="small" plain style="margin-left: 5px; margin-right: 5px" icon="clock-o"
-            @click="() => {
+          "
+        >
+          <van-button
+            size="mini"
+            plain
+            type="primary"
+            icon="minus"
+            @click="toLastMonth"
+          ></van-button>
+          <van-button
+            type="primary"
+            round
+            size="small"
+            plain
+            style="margin-left: 5px; margin-right: 5px"
+            icon="clock-o"
+            @click="
+              () => {
                 showPicker = true;
               }
-              ">
+            "
+          >
             {{ this.chooseMonth }}
           </van-button>
-          <van-button size="mini" v-show="showNextMonthButton" plain type="primary" icon="plus"
-            @click="toNextMonth"></van-button>
+          <van-button
+            size="mini"
+            v-show="showNextMonthButton"
+            plain
+            type="primary"
+            icon="plus"
+            @click="toNextMonth"
+          ></van-button>
         </div>
-        <van-button type="default" v-show="flows.length != 0" round size="small" style="margin-top: 10px"
-          @click="generateReport">生成报表
+        <van-button
+          type="default"
+          v-show="flows.length != 0"
+          round
+          size="small"
+          style="margin-top: 10px"
+          @click="generateReport"
+          >生成报表
         </van-button>
       </div>
     </div>
 
-    <van-divider :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }">
+    <van-divider
+      :style="{ color: '#1989fa', borderColor: '#1989fa', padding: '0 16px' }"
+    >
       账本概览
     </van-divider>
 
     <van-cell-group :border="false">
-      <div @click="toUpdateFlow(flow.id)" v-for="flow in flows" :key="flow.id">
-        <van-swipe-cell>
-          <!--          <template #left @open="handleOpen">-->
-          <template #left>
-            <van-button size="small" square color="#8c8c8c" type="success" class="delete-button"
-              @click="doShowNote(flow)">
-              {{ doGetNotString(flow) }}
-            </van-button>
-          </template>
-          <div style="
-              margin-left: 15px;
-              margin-top: 5px;
-              font-size: 13px;
-              color: #4e4e4e;
-            ">
-            {{ flow.fdate }}
-          </div>
-          <van-cell size="large" :title="flow.tname" :value="'￥' + flow.money" :label="flow.aname">
-            <template #default>
-              <div style="color: #000; font-size: 19px">￥{{ flow.money }}</div>
-              <van-tag :type="flow.tagStyle">{{ flow.hname }}</van-tag>
-              <van-tag v-show="flow.exempt" style="margin-left: 10px" color="gray" plain type="action.style">不计入总金额
-              </van-tag>
+      <div v-for="flowDate in flows" :key="flowDate.fDate">
+        <div
+          style="
+            margin-top: 5px;
+            font-size: 13px;
+            padding: 3px 15px;
+            color: #4e4e4e;
+            display: flex;
+            justify-content: start;
+            align-items: center;
+            display: -webkit-flex;
+            background-color: #f5f5f5;
+          "
+        >
+          {{ flowDate.fdate }}
+          <van-tag type="success" style="margin-left: 15px; padding: 2px 3px"
+            >收入:{{ flowDate.inCome }}</van-tag
+          >
+          <van-tag type="danger" style="margin-left: 15px; padding: 2px 3px"
+            >支出:{{ flowDate.outCome }}</van-tag
+          >
+        </div>
+        <div
+          @click="toUpdateFlow(flow.id)"
+          v-for="flow in flowDate.flows"
+          :key="flow.id"
+        >
+          <van-swipe-cell>
+            <!--          <template #left @open="handleOpen">-->
+            <template #left>
+              <van-button
+                size="small"
+                square
+                color="#8c8c8c"
+                type="success"
+                class="delete-button"
+                @click="doShowNote(flow)"
+              >
+                {{ doGetNotString(flow) }}
+              </van-button>
             </template>
-          </van-cell>
-          <div style="height: 1px"></div>
+            <van-cell
+              size="large"
+              :title="flow.tname"
+              :value="'￥' + flow.money"
+              :label="flow.aname"
+            >
+              <template #default>
+                <div style="color: #000; font-size: 19px">
+                  ￥{{ flow.money }}
+                </div>
+                <van-tag :type="flow.tagStyle">{{ flow.hname }}</van-tag>
+                <van-tag
+                  v-show="flow.exempt"
+                  style="margin-left: 10px"
+                  color="gray"
+                  plain
+                  type="action.style"
+                  >不计入总金额
+                </van-tag>
+              </template>
+            </van-cell>
+            <div style="height: 1px"></div>
 
-          <template #right>
-            <van-button v-if="flow.collect" square type="warning" class="delete-button" @click="doCollectFlow(flow)">
-              取消<br />收藏
-            </van-button>
-            <van-button v-else type="success" color="#1989fa" class="delete-button" @click="doCollectFlow(flow)">
-              收藏<br />账单
-            </van-button>
-            <van-button square text="删除" type="danger" class="delete-button" @click="doConfirmDeleteFlow(flow)" />
-          </template>
-        </van-swipe-cell>
+            <template #right>
+              <van-button
+                v-if="flow.collect"
+                square
+                type="warning"
+                class="delete-button"
+                @click="doCollectFlow(flow)"
+              >
+                取消<br />收藏
+              </van-button>
+              <van-button
+                v-else
+                type="success"
+                color="#1989fa"
+                class="delete-button"
+                @click="doCollectFlow(flow)"
+              >
+                收藏<br />账单
+              </van-button>
+              <van-button
+                square
+                text="删除"
+                type="danger"
+                class="delete-button"
+                @click="doConfirmDeleteFlow(flow)"
+              />
+            </template>
+          </van-swipe-cell>
+        </div>
       </div>
     </van-cell-group>
     <van-empty v-show="flows.length == 0" description="当月无账单" />
 
     <van-popup v-model:show="showPicker" round position="bottom">
-      <van-date-picker show-toolbar title="选择年月" type="year-month" v-model="currentChooseTime" :min-date="minDate"
-        :max-date="maxDate" :formatter="formatter" @cancel="showPicker = false" @confirm="this.onPickerClick"
-        :columns-type="columnsType" />
+      <van-date-picker
+        show-toolbar
+        title="选择年月"
+        type="year-month"
+        v-model="currentChooseTime"
+        :min-date="minDate"
+        :max-date="maxDate"
+        :formatter="formatter"
+        @cancel="showPicker = false"
+        @confirm="this.onPickerClick"
+        :columns-type="columnsType"
+      />
     </van-popup>
   </div>
 </template>
@@ -197,8 +326,8 @@ export default {
         this.chooseMonth =
           newMonth ||
           this.curDate.getFullYear() +
-          "-" +
-          (this.curDate.getMonth() + 1).toString().padStart(2, "0");
+            "-" +
+            (this.curDate.getMonth() + 1).toString().padStart(2, "0");
         this.getMonthFlow();
       }
     },
@@ -229,20 +358,25 @@ export default {
         this.flows = response.data.data.flows;
         this.totalIn = flow.totalIn;
         this.totalOut = flow.totalOut;
-        this.flows.forEach((flow) => {
-          if (flow.handle === 0) {
-            flow.handleName = "流入";
-            flow.baseColor = "#4ae75a";
-            flow.tagStyle = "success";
-          } else if (flow.handle === 1) {
-            flow.handleName = "流出";
-            flow.tagStyle = "danger";
-            flow.baseColor = "#f54949";
-          } else if (flow.handle === 2) {
-            flow.handleName = "内部转账";
-            flow.tagStyle = "primary";
-            flow.baseColor = "#39bdfa";
-          }
+        this.flows.forEach((flowDate) => {
+          flowDate.flows.forEach((flow) => {
+            if (flow.handle === 0) {
+              flow.handleName = "流入";
+              flow.baseColor = "#4ae75a";
+              flow.tagStyle = "success";
+            } else if (flow.handle === 1) {
+              flow.handleName = "流出";
+              flow.tagStyle = "danger";
+              flow.baseColor = "#f54949";
+            } else if (flow.handle === 2) {
+              flow.handleName = "内部转账";
+              flow.tagStyle = "primary";
+              flow.baseColor = "#39bdfa";
+            }
+            flow.dateSub = flow.fdate.substring(5, 10);
+            flow.moneyNum = parseFloat(flow.money);
+          });
+
           if (this.handle === 3) {
             this.detail =
               this.chooseMonth +
@@ -251,8 +385,6 @@ export default {
               "  总支出： ￥" +
               this.totalOut;
           }
-          flow.dateSub = flow.fdate.substring(5, 10);
-          flow.moneyNum = parseFloat(flow.money);
         });
         var fEarn = parseFloat(this.totalIn) - parseFloat(this.totalOut);
 
@@ -331,7 +463,7 @@ export default {
       }
     },
 
-    prepareDateDouble() { },
+    prepareDateDouble() {},
     onPickerClick({ selectedValues }) {
       let pickDate = new Date(selectedValues[0], selectedValues[1] - 1);
       console.log(new Date(selectedValues[0], selectedValues[1] - 1));
@@ -394,7 +526,7 @@ export default {
         .then(() => {
           this.makeExcel();
         })
-        .catch(() => { });
+        .catch(() => {});
     },
     makeExcel() {
       showLoadingToast({
@@ -463,10 +595,7 @@ export default {
   border: none;
   outline: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  transition:
-    background-color 0.3s,
-    box-shadow 0.3s,
-    transform 0.3s;
+  transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
   display: flex;
   /* 使用flex布局 */
   justify-content: center;
@@ -482,14 +611,14 @@ export default {
 }
 
 .income-button {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   bottom: 100px;
   right: 100px;
 }
 
 .outcome-button {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   bottom: 100px;
   right: 20px;

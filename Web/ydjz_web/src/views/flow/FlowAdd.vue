@@ -4,7 +4,7 @@
       right-text="快记模板" @click-right="fastPopupShow = true" />
     <van-nav-bar v-else title="修改账单" left-arrow @click-left="onClickLeft" />
     <van-cell-group>
-      <van-field input-align="right" v-model="money" type="number" label="账单金额" placeholder="请输入账单金额" />
+      <van-field input-align="right" v-model="money" type="number" label="账单金额" placeholder="请输入账单金额" ref="getFocus" />
       <!--      @touchstart.native.stop="keyboardShow = true"-->
       <van-cell title="选择收支" is-link @click="onActionClick">
         <template #default>
@@ -171,6 +171,7 @@
 </template>
 
 <script>
+import { ref} from "vue"
 import { showConfirmDialog, showFailToast, showSuccessToast } from "vant";
 import template from "@/views/setting/template/Template.vue";
 
@@ -192,7 +193,7 @@ export default {
       chooseTag: {},
       fastPopupShow: false,
       fastDialogShow: false,
-
+      getFocus: ref(),
       keyboardShow: false,
       keyboardValue: "",
       childMoneyItem: [],
@@ -242,6 +243,9 @@ export default {
     }
     this.doGetActions()
     this.doGetAccounts()
+    this.$nextTick(function () {
+        this.$refs.getFocus.focus();
+    });
   },
   methods: {
     fastChooseClick(template) {
@@ -395,19 +399,19 @@ export default {
       } else {
         this.submitMoney = this.money
       }
-      showConfirmDialog({
-        title: '请确认账单',
-        message:
-          '总金额: ￥' + this.submitMoney + '\n' +
-          "备注：" + this.submitNote,
-        confirmButtonText: "确认无误"
-      })
-        .then(() => {
-          this.doSubmitRequest()
-        })
-        .catch(() => {
-          // on cancel
-        });
+      this.doSubmitRequest()
+      // showConfirmDialog({
+      //   title: '请确认账单',
+      //   message:
+      //     '总金额: ￥' + this.submitMoney + '\n' +
+      //     "备注：" + this.submitNote,
+      //   confirmButtonText: "确认无误"
+      // })
+      //   .then(() => {
+      //     this.doSubmitRequest()
+      //   })
+      //   .catch(() => {
+      //   });
     },
 
     onSubmitBtnClick() {
@@ -448,6 +452,7 @@ export default {
           note: this.submitNote
         }
       }).then(() => {
+        showFailToast("添加成功")
         this.$router.go(-1)
       })
     },
